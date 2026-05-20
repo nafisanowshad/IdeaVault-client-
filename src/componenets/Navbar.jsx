@@ -62,8 +62,8 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center space-x-3 md:space-x-0">
-          <button className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white px-4 py-1.5 md:px-5 md:py-2 rounded-full font-semibold text-sm md:text-base transition duration-300 shadow-lg shadow-purple-900/40">
-            <span className="flex gap-1 items-center">Login</span>
+          <button className="bg-linear-to-r from-purple-600 to-fuchsia-500 text-white hover:opacity-100 px-5 py-2.5 rounded-3xl font-medium text-sm md:text-base shadow-lg shadow-purple-500/20 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-105 hover:shadow-purple-500/40 cursor-pointer">
+          Login
           </button>
 
           <div className="md:hidden">
