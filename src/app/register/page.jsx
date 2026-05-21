@@ -1,10 +1,37 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
+import Link from 'next/link';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    photoUrl: '',
+    password: ''
+  });
+
+  const passwordCriteria = {
+    minLength: formData.password.length >= 6,
+    hasUpper: /[A-Z]/.test(formData.password),
+    hasLower: /[a-z]/.test(formData.password),
+  };
+
+  const isPasswordValid = Object.values(passwordCriteria).every(Boolean);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isPasswordValid) {
+      alert('Password must be at least 6 characters long and include both uppercase (A-Z) and lowercase (a-z) letters.');
+      return;
+    }
+    console.log('Registration Data:', formData);
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#f9fafb] flex flex-col md:flex-row font-sans">
@@ -12,38 +39,68 @@ export default function LoginPage() {
       <div className="w-full md:w-[45%] flex items-center justify-center p-8 lg:p-16 bg-white">
         <div className="w-full max-w-sm">
           
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight">
-            Sign in to IdeaVault
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 tracking-tight">
+            Create your account
           </h2>
 
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                Full Name <span className="text-rose-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all text-gray-900"
+                required
+              />
+            </div>
+
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                 Email Address <span className="text-rose-500">*</span>
               </label>
               <input 
                 type="email" 
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Enter your email address"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-hidden focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all text-gray-900"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all text-gray-900"
                 required
               />
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="text-xs font-semibold text-gray-700">
-                  Password <span className="text-rose-500">*</span>
-                </label>
-                <a href="#" className="text-xs text-gray-500 hover:text-purple-600 transition-colors">
-                  Forgot password?
-                </a>
-              </div>
-              
+              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                Photo URL
+              </label>
+              <input 
+                type="url" 
+                name="photoUrl" 
+                value={formData.photoUrl}
+                onChange={handleChange}
+                placeholder="https://example.com/avatar.jpg"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all text-gray-900" 
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                Password <span className="text-rose-500">*</span>
+              </label>
               <div className="relative">
                 <input 
                   type={showPassword ? "text" : "password"} 
-                  placeholder="Enter your password"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm focus:outline-hidden focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all text-gray-900"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create a strong password"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-sm focus:outline-hidden focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all text-gray-900"
                   required
                 />
                 <button 
@@ -67,32 +124,30 @@ export default function LoginPage() {
 
             <button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white font-medium py-3 rounded-lg text-sm shadow-md transition-all cursor-pointer text-center"
+              className="w-full text-white font-medium py-3 rounded-lg text-sm shadow-md transition-all text-center bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 cursor-pointer"
             >
-              Sign in
+              Register Account
             </button>
           </form>
 
-          <div className="relative flex py-6 items-center">
+          <div className="relative flex py-5 items-center">
             <div className="flex-grow border-t border-gray-200"></div>
             <span className="flex-shrink mx-4 text-xs text-gray-400 uppercase font-medium">or</span>
             <div className="flex-grow border-t border-gray-200"></div>
           </div>
 
-          <div className="space-y-3">
-            <button className="w-full flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 rounded-lg text-sm transition-all cursor-pointer">
-              <svg className="w-4 h-4" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.61c-.29 1.53-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.65-5.17 3.65-8.58z"/>
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.15C3.18 21.88 7.31 24 12 24z"/>
-                <path fill="#FBBC05" d="M5.32 14.24A7.16 7.16 0 0 1 5 12c0-.79.13-1.57.32-2.34V6.51H1.21A11.94 11.94 0 0 0 0 12c0 1.92.45 3.74 1.21 5.49l4.11-3.25z"/>
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 5.51l4.11 3.25c.94-2.85 3.57-4.96 6.68-4.96z"/>
-              </svg>
-              Continue with Google
-            </button>
-          </div>
+          <button className="w-full flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 rounded-lg text-sm transition-all cursor-pointer">
+            <svg className="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.61c-.29 1.53-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.65-5.17 3.65-8.58z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.15C3.18 21.88 7.31 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.32 14.24A7.16 7.16 0 0 1 5 12c0-.79.13-1.57.32-2.34V6.51H1.21A11.94 11.94 0 0 0 0 12c0 1.92.45 3.74 1.21 5.49l4.11-3.25z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 5.51l4.11 3.25c.94-2.85 3.57-4.96 6.68-4.96z"/>
+            </svg>
+            Sign up with Google
+          </button>
 
-          <p className="text-center text-xs text-gray-500 mt-8">
-            Don't have an account? <Link href="/register" className="text-purple-600 font-semibold hover:underline">Register</Link>
+          <p className="text-center text-xs text-gray-500 mt-6">
+            Already have an account? <Link href="/login" className="text-purple-600 font-semibold hover:underline">Sign in</Link>
           </p>
 
         </div>
@@ -127,13 +182,13 @@ export default function LoginPage() {
 
         <div className="max-w-xl my-auto z-10 py-12 md:py-0">
           <h1 className="text-4xl lg:text-5xl font-heading font-black text-white tracking-tight mb-4 leading-[1.15]">
-            Secure your concepts <br />
+            Join the collective brainwave <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-purple-400">
               #withIdeaVault
             </span>
           </h1>
           <p className="text-sm md:text-base text-gray-400 leading-relaxed max-w-md">
-            From raw brainwaves and market validation to micro-SaaS blueprints, secure and scale your next startup idea on one powerful collaboration hub.
+            Turn your spark into reality. Share raw blueprints, get real-time validation, and build tomorrow's micro-SaaS with a community of innovative founders.
           </p>
         </div>
 
