@@ -1,16 +1,17 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
-const TrendingPage = () => {
-  const [ideas, setIdeas] = useState([]);
+export default function IdeasPage() {
+  const [ideas, setIdeas] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchIdeas = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ideas`); 
         const data = await res.json();
         setIdeas(data);
       } catch (error) {
@@ -23,33 +24,64 @@ const TrendingPage = () => {
     fetchIdeas();
   }, []);
 
-  const limit = 6;
-  const displayedIdeas = ideas.slice(0, limit);
+  const categories = ['All', ...new Set(ideas.map((idea) => idea.category))];
+
+  const displayedIdeas = ideas.filter((idea) => {
+    const matchesSearch = idea.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || idea.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="p-7 py-12 bg-[#0f041c] min-h-screen text-white">
       
       <div className="w-full flex justify-start items-center py-12">
-        <h2 className="group relative inline-block m-0 h-auto bg-transparent p-0 uppercase tracking-[4px] text-white text-3xl sm:text-4xl md:text-5xl font-heading font-black select-none cursor-default">
-          &nbsp;Trending Ideas&nbsp;
-          <span
-            aria-hidden="true"
-            className="absolute inset-0 block w-0 overflow-hidden box-border whitespace-nowrap text-fuchsia-500 border-r-[4px] border-fuchsia-500 transition-all duration-600 ease-in-out [-webkit-text-stroke:1px_#d946ef] group-hover:w-full group-hover:drop-shadow-[0_0_30px_#d946ef]"
-          >
-            &nbsp;Trending Ideas&nbsp;
-          </span>
+        <h2 className="group relative inline-block m-0 h-auto bg-transparent px-8 uppercase tracking-[4px] text-white text-3xl sm:text-4xl md:text-5xl font-heading font-black select-none cursor-default">
+        Explore Ideas
         </h2>
+      </div>
+
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 mb-12 px-8">
+       
+        <div className="flex-grow relative">
+          <input
+            type="text"
+            placeholder="Search ideas by title or description..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-[#16042c] border border-purple-950/60 rounded-xl px-5 py-3.5 pl-11 text-sm text-white focus:outline-hidden focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500 transition-all placeholder:text-gray-500"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.601Z" />
+          </svg>
+        </div>
+
+        <div className="md:w-64">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full bg-[#16042c] border border-purple-950/60 rounded-xl px-5 py-3.5 text-sm text-white focus:outline-hidden focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500 transition-all cursor-pointer appearance-none"
+            style={{ backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='%23a855f7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>")`, backgroundPosition: 'right 16px center', backgroundSize: '16px', backgroundRepeat: 'no-repeat' }}
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat} className="bg-[#0f041c] text-white">
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {loading && (
         <div className="text-center text-gray-400 py-12 text-lg animate-pulse">
-          Loading trending ideas...
+          Loading amazing ideas...
         </div>
       )}
 
       {!loading && displayedIdeas.length === 0 && (
         <div className="text-center text-gray-500 py-12 text-lg border border-dashed border-purple-950/40 rounded-2xl max-w-7xl mx-auto mx-8">
-          No trending ideas available right now.
+          No ideas found matching your criteria.
         </div>
       )}
 
@@ -141,6 +173,4 @@ const TrendingPage = () => {
       )}
     </div>
   );
-};
-
-export default TrendingPage;
+}
