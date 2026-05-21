@@ -62,9 +62,11 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center space-x-3 md:space-x-0">
+          <Link href="/login">
           <button className="bg-linear-to-r from-purple-600 to-fuchsia-500 text-white hover:opacity-100 px-5 py-2.5 rounded-3xl font-medium text-sm md:text-base shadow-lg shadow-purple-500/20 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-105 hover:shadow-purple-500/40 cursor-pointer">
           Login
           </button>
+          </Link>
 
           <div className="md:hidden">
             <button 

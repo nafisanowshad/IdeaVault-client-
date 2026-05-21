@@ -1,12 +1,12 @@
-import Banner from "@/componenets/Banner";
+import Banner from "@/components/Banner";
 import TrendingPage from "./trending-idea/page";
-import ExtraSection from "@/componenets/extra-section";
-import ExtraSection2 from "@/componenets/extra-section2";
+import ExtraSection from "@/components/extra-section";
+import ExtraSection2 from "@/components/extra-section2";
 
 export default function Home() {
   return (
     <div>
-      <Banner/>
+      <Banner />
       <TrendingPage />
       <ExtraSection />
       <ExtraSection2 />
